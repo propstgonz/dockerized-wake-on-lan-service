@@ -1,0 +1,11 @@
+services:
+  wakeonlan:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: wakeonlan
+    env_file:
+      - .env
+    network_mode: "host"
+    restart: unless-stopped
+    privileged: true
