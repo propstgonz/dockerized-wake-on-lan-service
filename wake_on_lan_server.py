@@ -7,6 +7,7 @@ def log(msg):
 def _main():
     target_ip = os.getenv('TARGET_IP')
     target_mac = os.getenv('TARGET_MAC')
+    wol_interface = os.getenv('WOL_INTERFACE')
 
     check_interval_env = os.getenv('CHECK_INTERVAL')
     if check_interval_env is None:
@@ -24,6 +25,9 @@ def _main():
         return
 
     log(f"Monitoring {target_ip} / {target_mac} every {check_interval}s")
+    if wol_interface:
+        log(f"Using network interface: {wol_interface}")
+
     was_online = True
 
     while True:
@@ -37,11 +41,17 @@ def _main():
                 was_online = True
         else:
             log(f"{target_ip} is OFFLINE. Sending WOL packet to {target_mac}")
+
+            etherwake_cmd = ['/usr/sbin/etherwake', '-b']
+            if wol_interface:
+                etherwake_cmd.extend(['-i', wol_interface])
+            etherwake_cmd.append(target_mac)
+
             try:
-                subprocess.Popen(['/usr/sbin/etherwake', '-b', target_mac],
-                                 stdout=subprocess.PIPE)
+                subprocess.Popen(etherwake_cmd, stdout=subprocess.PIPE)
             except Exception as e:
                 log(f"Error executing etherwake: {e}")
+
             was_online = False
 
         time.sleep(check_interval)
