@@ -5,7 +5,7 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-COPY wake_on_lan.py /app/wake_on_lan_server.py
+COPY wake_on_lan_server.py /app/wake_on_lan_server.py
 
 WORKDIR /app
 
