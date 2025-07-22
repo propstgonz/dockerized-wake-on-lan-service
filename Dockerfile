@@ -5,8 +5,8 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-COPY wakeonlan.py /app/wakeonlan.py
+COPY wake_on_lan.py /app/wake_on_lan_server.py
 
 WORKDIR /app
 
-CMD ["python", "wakeonlan.py"]
+CMD ["python", "wake_on_lan_server.py"]
